@@ -40,7 +40,7 @@
 
             <!-- 在filter裡設定BOOT_COMPLETED為要捕捉的訊息 -->
             <intent-filter>
-                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
     </application>
