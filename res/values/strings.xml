@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, SmallQActivity!</string>
+    <string name="app_name">沙漏流量瓶</string>
+    <string name="first">hello</string>
+    <string name="second">lo</string>
+    <string name="about_me">
+       	沙漏流量瓶，针对现在流量监控软件的不精确而推出的，本软件使用了友好，动感的界面
+       	给用户带来一种时尚的气息，本软件使用了独特的算法，使得流量监控更为准确，特别是
+       	wifi与数据网络的分开监控，而且能够进行单个程序流量监控，对于用户的需求，我特别
+       	做了这个省电版，功能简单，实用，蓝色是确定，红色是取消与清除，作为该软件的开发
+       	者，我是shadow，希望下载的用户能够予以评论，使我能更好的改进软件，我的qq是
+       	282325694，有建议的用户可以前来，Thanks。
+        
+    </string>
+
+</resources>
