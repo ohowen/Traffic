@@ -1,7 +1,6 @@
 package com.jrh.traffic.model;
 
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 public class AppInfo {
 	// °üÃû
@@ -79,7 +78,6 @@ public class AppInfo {
 		String str = "0K";
 		int b = 1024, c = 1048576;
 
-		Log.v("hells", lg + "");
 		if (lg < 1024) {
 			str = "0K";
 		} else if (lg >= b && lg < c) {

@@ -14,32 +14,32 @@ import android.os.IBinder;
 import android.text.format.Time;
 import android.widget.ListView;
 import com.jrh.traffic.R;
-import com.jrh.traffic.adapter.Adapter;
-import com.jrh.traffic.main.Mservice.MyBinder;
+import com.jrh.traffic.adapter.ListAdapter;
+import com.jrh.traffic.main.TrafficService.MBinder;
 import com.jrh.traffic.model.AppInfo;
 
 public class MainActivity extends Activity {
 	// 定义流量
-	private ListView listView;
-	private Adapter list_adapter;
-	private List<AppInfo> appInfos;
-	private Mservice mservice;
+	private ListView mListView;
+	private ListAdapter mListAdapter;
+	private List<AppInfo> mAppInfos;
+	private TrafficService mService;
 	private Boolean mClick = false;
-	private SharedPreferences preferences;
+	private SharedPreferences mPreferences;
 	private Context mContext;
 	// 定义一个handler刷新界面；
-	private Handler handler = new Handler();
+	private Handler mHandler = new Handler();
 	private Runnable runnable = new Runnable() {
 
 		@Override
 		public void run() {
-			appInfos = mservice.infos;
+			mAppInfos = mService.mInfos;
 			// 刷新总量
-			if (mservice.mGet == true && mClick == true) {
-				list_adapter.setList(appInfos);
-				list_adapter.notifyDataSetChanged();
+			if (mService.mGet == true && mClick == true) {
+				mListAdapter.setList(mAppInfos);
+				mListAdapter.notifyDataSetChanged();
 			}
-			handler.postDelayed(runnable, 3000);
+			mHandler.postDelayed(runnable, 3000);
 		}
 	};
 
@@ -49,12 +49,12 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.applist);
 		mContext = this;
 		
-		listView = (ListView) findViewById(R.id.list_view);
+		mListView = (ListView) findViewById(R.id.list_view);
 		// 启动服务
-		Intent intent = new Intent(MainActivity.this, Mservice.class);
+		Intent intent = new Intent(MainActivity.this, TrafficService.class);
 		this.startService(intent);
 		
-		preferences = getSharedPreferences("small_setting", MODE_PRIVATE);
+		mPreferences = getSharedPreferences("setting", MODE_PRIVATE);
 		setPreferrences();
 	}
 
@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
 	private void setPreferrences() {
 		Time time = new Time();
 		time.setToNow();
-		SharedPreferences.Editor editor = preferences.edit();
+		SharedPreferences.Editor editor = mPreferences.edit();
 		editor.putInt("year", time.year);
 		editor.putInt("mouth", time.month);
 		editor.putInt("day", time.monthDay);
@@ -72,12 +72,11 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		// 绑定后台服务
-		Intent binderIntent = new Intent(mContext, Mservice.class);
+		Intent binderIntent = new Intent(mContext, TrafficService.class);
 		mContext.bindService(binderIntent, connection, BIND_AUTO_CREATE);
 		super.onResume();
 	}
 
-	// 定义serviceconnection
 	private ServiceConnection connection = new ServiceConnection() {
 
 		@Override
@@ -87,19 +86,18 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			// 强制转换ibinder为mybinder以获得monitorservice对象
-			MyBinder binder = (MyBinder) service;
-			mservice = binder.getService();
+			MBinder binder = (MBinder) service;
+			mService = binder.getService();
 			getData();
-			handler.postDelayed(runnable, 3000);
+			mHandler.postDelayed(runnable, 3000);
 		}
 	};
 
 	private void getData() {
-		if (mservice.infos != null) {
-			appInfos = mservice.infos;
-			list_adapter = new Adapter(appInfos, mContext);
-			listView.setAdapter(list_adapter);
+		if (mService.mInfos != null) {
+			mAppInfos = mService.mInfos;
+			mListAdapter = new ListAdapter(mAppInfos, mContext);
+			mListView.setAdapter(mListAdapter);
 		}
 	}
 }

@@ -6,27 +6,24 @@ import java.util.List;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.TrafficStats;
 import android.text.format.Time;
-import android.util.Log;
 
 public class PackagesInfo {
 
-	private List<ApplicationInfo> appList;
-	List<PackageInfo> packs;
-	PackageManager pm;
-	Context context;
-	ConnectivityManager manager;
+	private List<ApplicationInfo> mAppList;
+	private PackageManager mPackageManager;
+	private Context mContext;
+	private ConnectivityManager mConnManager;
 
 	public PackagesInfo(Context context) {
 		// 通包管理器，检索所有的应用程序（甚至卸载的）与数据目录
-		this.context = context;
-		pm = context.getApplicationContext().getPackageManager();
-		appList = pm.getInstalledApplications(0);
+		this.mContext = context;
+		mPackageManager = context.getApplicationContext().getPackageManager();
+		mAppList = mPackageManager.getInstalledApplications(0);
 	}
 
 	/**
@@ -41,7 +38,7 @@ public class PackagesInfo {
 		if (name == null) {
 			return null;
 		}
-		for (ApplicationInfo appinfo : appList) {
+		for (ApplicationInfo appinfo : mAppList) {
 			if (name.equals(appinfo.processName)) {
 				return appinfo;
 			}
@@ -50,13 +47,13 @@ public class PackagesInfo {
 	}
 
 	public List<AppInfo> getNetworkApps() {
-		
+
 		// 获取包管理器，在这里主要通过包名获取程序的图标和程序名
 		List<AppInfo> list = new ArrayList<AppInfo>();
-		for (ApplicationInfo ra : appList) {
+		for (ApplicationInfo ra : mAppList) {
 
 			// 过滤掉没有联网功能的软件
-			int reslut = context.getPackageManager().checkPermission(
+			int reslut = mContext.getPackageManager().checkPermission(
 			        "android.permission.INTERNET", ra.processName);
 			if (reslut != PackageManager.PERMISSION_GRANTED) {
 				continue;
@@ -66,19 +63,20 @@ public class PackagesInfo {
 				if ((getInfo(ra.processName).flags & ApplicationInfo.FLAG_SYSTEM) == 0
 				        && (getInfo(ra.processName).flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) == 0) {
 					AppInfo appInfo = new AppInfo();
-					appInfo.setApp_icon(getInfo(ra.processName).loadIcon(pm));
-					appInfo.setApp_name(getInfo(ra.processName).loadLabel(pm)
-					        .toString());
+					appInfo.setApp_icon(getInfo(ra.processName).loadIcon(
+					        mPackageManager));
+					appInfo.setApp_name(getInfo(ra.processName).loadLabel(
+					        mPackageManager).toString());
 					appInfo.setApp_package(ra.processName);
 
-					SharedPreferences preferences = context
-					        .getSharedPreferences("shadow_traffic",
+					SharedPreferences preferences = mContext
+					        .getSharedPreferences("traffic_state",
 					                Context.MODE_PRIVATE);
-					manager = (ConnectivityManager) context
+					mConnManager = (ConnectivityManager) mContext
 					        .getSystemService(Context.CONNECTIVITY_SERVICE);
-					NetworkInfo wifi = manager
+					NetworkInfo wifi = mConnManager
 					        .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-					NetworkInfo mobile = manager
+					NetworkInfo mobile = mConnManager
 					        .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 					SharedPreferences.Editor editor = preferences.edit();
 					long besend = preferences.getLong(ra.uid + "besend", 0);
@@ -149,21 +147,17 @@ public class PackagesInfo {
 					appInfo.setApp_sent(preferences.getLong(ra.uid + "send", 0));
 					appInfo.setApp_traffic(preferences.getLong(ra.uid + "rev",
 					        0) + preferences.getLong(ra.uid + "send", 0));
-					Log.v("xxss",
-					        appInfo.getApp_sent() + "ss" + appInfo.getApp_rev()
-					                + "aa" + appInfo.getApp_name());
 					list.add(appInfo);
-					Log.v("shadow", appInfo.getApp_name());
 
 					// 每月1日把记录清零
-					SharedPreferences preferences2 = context
-					        .getSharedPreferences("shadow_traffic",
+					SharedPreferences preferences2 = mContext
+					        .getSharedPreferences("traffic_state",
 					                Context.MODE_PRIVATE);
 					String now = "" + getCurrentTime()[2];
 					String yet = "" + preferences2.getInt("day", 1);
 					if (now.equals(yet)) {
-						SharedPreferences preference = context
-						        .getSharedPreferences("shadow_traffic",
+						SharedPreferences preference = mContext
+						        .getSharedPreferences("traffic_state",
 						                Context.MODE_PRIVATE);
 						SharedPreferences.Editor edito = preference.edit();
 						edito.clear().commit();

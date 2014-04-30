@@ -32,7 +32,7 @@
         </activity>
 
         <service
-            android:name=".main.Mservice"
+            android:name=".main.TrafficService"
             android:exported="true" >
         </service>
 
