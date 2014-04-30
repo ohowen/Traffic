@@ -17,7 +17,7 @@ public class TrafficService extends Service {
 	public Boolean mGet = false;
 	public List<AppInfo> mInfos;
 
-	// 使用handler不停获取程序信息
+	// 浣跨敤handler涓嶅仠鑾峰彇绋嬪簭淇℃伅
 	private Handler mHandler = new Handler();
 	private Runnable runnable = new Runnable() {
 
@@ -54,7 +54,7 @@ public class TrafficService extends Service {
 		super.onDestroy();
 	}
 
-	// 自定义binder
+	// 鑷畾涔塨inder
 	class MBinder extends Binder {
 		public TrafficService getService() {
 			return TrafficService.this;

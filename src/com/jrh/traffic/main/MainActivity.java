@@ -7,11 +7,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.text.format.Time;
 import android.widget.ListView;
 import com.jrh.traffic.R;
 import com.jrh.traffic.adapter.ListAdapter;
@@ -19,22 +17,21 @@ import com.jrh.traffic.main.TrafficService.MBinder;
 import com.jrh.traffic.model.AppInfo;
 
 public class MainActivity extends Activity {
-	// 定义流量
+	// 瀹氫箟娴侀噺
 	private ListView mListView;
 	private ListAdapter mListAdapter;
 	private List<AppInfo> mAppInfos;
 	private TrafficService mService;
 	private Boolean mClick = false;
-	private SharedPreferences mPreferences;
 	private Context mContext;
-	// 定义一个handler刷新界面；
+	// 瀹氫箟涓�涓猦andler鍒锋柊鐣岄潰
 	private Handler mHandler = new Handler();
 	private Runnable runnable = new Runnable() {
 
 		@Override
 		public void run() {
 			mAppInfos = mService.mInfos;
-			// 刷新总量
+			// 鍒锋柊鎬婚噺
 			if (mService.mGet == true && mClick == true) {
 				mListAdapter.setList(mAppInfos);
 				mListAdapter.notifyDataSetChanged();
@@ -50,28 +47,14 @@ public class MainActivity extends Activity {
 		mContext = this;
 		
 		mListView = (ListView) findViewById(R.id.list_view);
-		// 启动服务
+		// 鍚姩鏈嶅姟
 		Intent intent = new Intent(MainActivity.this, TrafficService.class);
 		this.startService(intent);
-		
-		mPreferences = getSharedPreferences("setting", MODE_PRIVATE);
-		setPreferrences();
-	}
-
-	// 设置初始化
-	private void setPreferrences() {
-		Time time = new Time();
-		time.setToNow();
-		SharedPreferences.Editor editor = mPreferences.edit();
-		editor.putInt("year", time.year);
-		editor.putInt("mouth", time.month);
-		editor.putInt("day", time.monthDay);
-		editor.commit();
 	}
 
 	@Override
 	protected void onResume() {
-		// 绑定后台服务
+		// 缁戝畾鍚庡彴鏈嶅姟
 		Intent binderIntent = new Intent(mContext, TrafficService.class);
 		mContext.bindService(binderIntent, connection, BIND_AUTO_CREATE);
 		super.onResume();

@@ -3,19 +3,19 @@ package com.jrh.traffic.model;
 import android.graphics.drawable.Drawable;
 
 public class AppInfo {
-	// °üÃû
+	// åŒ…å
 	private String app_package;
-	// Í¼±ê
+	// å›¾æ ‡
 	private Drawable app_icon;
-	// Ãû×Ö
-	private String app_name = "ÕıÔÚÔËĞĞµÄ³ÌĞò";
-	// Èí¼şgprsÉÏ´«×ÜÁ¿
+	// åå­—
+	private String app_name = "æ­£åœ¨è¿è¡Œçš„ç¨‹åº";
+	// è½¯ä»¶gprsä¸Šä¼ æ€»é‡
 	private String app_sent = "0K";
-	// Èí¼şgprsÏÂÔØ×ÜÁ¿
+	// è½¯ä»¶gprsä¸‹è½½æ€»é‡
 	private String app_rev = "0K";
-	// Èí¼şÁ÷Á¿×ÜÁ¿
+	// è½¯ä»¶æµé‡æ€»é‡
 	private String app_traffic = "0K";
-	// ±êÊ¾
+	// æ ‡ç¤º
 	private boolean ta = true;
 
 	public boolean isTa() {

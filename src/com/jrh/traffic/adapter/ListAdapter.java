@@ -71,9 +71,9 @@ public class ListAdapter extends BaseAdapter {
 			convertView.setTag(R.string.first, holder);
 		}
 		final AppInfo appinfo = (AppInfo) mList.get(position);
-		// ÉèÖÃÍ¼±ê
+		// è®¾ç½®å›¾æ ‡
 		holder.imgage.setImageDrawable(appinfo.getApp_icon());
-		// ÉèÖÃ³ÌĞòÃû
+		// è®¾ç½®ç¨‹åºå
 		holder.text.setText(appinfo.getApp_name());
 		holder.gprs_rev.setText(appinfo.getApp_rev());
 		holder.gprs_send.setText(appinfo.getApp_sent());

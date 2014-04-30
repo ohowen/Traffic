@@ -8,7 +8,7 @@ public class BootReceiver extends android.content.BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		// ¿ª»úÆô¶¯¼à¿Ø·şÎñ
+		// å¼€æœºå¯åŠ¨ç›‘æ§æœåŠ¡
 		SharedPreferences preferences = context.getSharedPreferences(
 		        "traffic_state", Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = preferences.edit();

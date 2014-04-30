@@ -20,17 +20,17 @@ public class PackagesInfo {
 	private ConnectivityManager mConnManager;
 
 	public PackagesInfo(Context context) {
-		// Í¨°ü¹ÜÀíÆ÷£¬¼ìË÷ËùÓĞµÄÓ¦ÓÃ³ÌĞò£¨ÉõÖÁĞ¶ÔØµÄ£©ÓëÊı¾İÄ¿Â¼
+		// é€šè¿‡åŒ…ç®¡ç†å™¨ï¼Œæ£€ç´¢æ‰€æœ‰çš„åº”ç”¨ç¨‹åºï¼ˆç”šè‡³å¸è½½çš„ï¼‰ä¸æ•°æ®ç›®å½•
 		this.mContext = context;
 		mPackageManager = context.getApplicationContext().getPackageManager();
 		mAppList = mPackageManager.getInstalledApplications(0);
 	}
 
 	/**
-	 * Í¨¹ıÒ»¸ö³ÌĞòÃû·µ»Ø¸Ã³ÌĞòµÄÒ»¸öApplication¶ÔÏó¡£
+	 * é€šè¿‡ä¸€ä¸ªç¨‹åºåè¿”å›è¯¥ç¨‹åºçš„ä¸€ä¸ªApplicationå¯¹è±¡ã€‚
 	 * 
 	 * @param name
-	 *            ³ÌĞòÃû
+	 *            ç¨‹åºå
 	 * @return ApplicationInfo
 	 */
 
@@ -48,17 +48,16 @@ public class PackagesInfo {
 
 	public List<AppInfo> getNetworkApps() {
 
-		// »ñÈ¡°ü¹ÜÀíÆ÷£¬ÔÚÕâÀïÖ÷ÒªÍ¨¹ı°üÃû»ñÈ¡³ÌĞòµÄÍ¼±êºÍ³ÌĞòÃû
+		// è·å–åŒ…ç®¡ç†å™¨ï¼Œåœ¨è¿™é‡Œä¸»è¦é€šè¿‡åŒ…åè·å–ç¨‹åºçš„å›¾æ ‡å’Œç¨‹åºå
 		List<AppInfo> list = new ArrayList<AppInfo>();
 		for (ApplicationInfo ra : mAppList) {
 
-			// ¹ıÂËµôÃ»ÓĞÁªÍø¹¦ÄÜµÄÈí¼ş
+			// è¿‡æ»¤æ‰æ²¡æœ‰è”ç½‘åŠŸèƒ½çš„è½¯ä»¶
 			int reslut = mContext.getPackageManager().checkPermission(
 			        "android.permission.INTERNET", ra.processName);
 			if (reslut != PackageManager.PERMISSION_GRANTED) {
 				continue;
 			}
-			// ¹ıÂËµôÎŞ¶ÔÓ¦µÄ³ÌĞò
 			if (getInfo(ra.processName) != null) {
 				if ((getInfo(ra.processName).flags & ApplicationInfo.FLAG_SYSTEM) == 0
 				        && (getInfo(ra.processName).flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) == 0) {
@@ -85,17 +84,17 @@ public class PackagesInfo {
 					long rev = preferences.getLong(ra.uid + "rev", 0);
 					long wisend = preferences.getLong(ra.uid + "wisend", 0);
 					long wirev = preferences.getLong(ra.uid + "wirev", 0);
-					// »ñÈ¡µ¥¸ö³ÌĞòµÄÁ÷Á¿
-					// Èç¹ûÉè±¸²»Ö§³Ö£¬Ôò±íÊ¾Îª0
+					// è·å–å•ä¸ªç¨‹åºçš„æµé‡
+					// å¦‚æœè®¾å¤‡ä¸æ”¯æŒï¼Œåˆ™è¡¨ç¤ºä¸º0
 					if (TrafficStats.getUidTxBytes(ra.uid) == -1) {
 						editor.putLong(ra.uid + "send", 0);
 						editor.putLong(ra.uid + "rev", 0);
 						editor.commit();
 					} else {
-						// ÒÆ¶¯Êı¾İÁ¬½Ó
+						// ç§»åŠ¨æ•°æ®è¿æ¥
 						if (mobile.getState() == NetworkInfo.State.CONNECTED
 						        && wifi.getState() != NetworkInfo.State.CONNECTED) {
-							// ¿ª»úºó£¬firstÊÇture
+							// å¼€æœºåï¼Œfirstæ˜¯ture
 							if (!preferences.getBoolean("first", true)) {
 								editor.putLong(ra.uid + "send",
 								        TrafficStats.getUidTxBytes(ra.uid)
@@ -104,7 +103,7 @@ public class PackagesInfo {
 								        TrafficStats.getUidRxBytes(ra.uid)
 								                - berev + rev);
 							} else {
-								// ¿ª»úµÚÒ»´ÎÔËĞĞ
+								// å¼€æœºç¬¬ä¸€æ¬¡è¿è¡Œ
 								editor.putLong(ra.uid + "send",
 								        TrafficStats.getUidTxBytes(ra.uid)
 								                + send);
@@ -119,7 +118,7 @@ public class PackagesInfo {
 							editor.putLong(ra.uid + "berev", berev);
 							editor.commit();
 						} else {
-							// wifiÁ¬½Ó
+							// wifiè¿æ¥
 							if (!preferences.getBoolean("first", true)) {
 								editor.putLong(ra.uid + "wisend",
 								        TrafficStats.getUidTxBytes(ra.uid)
@@ -149,7 +148,7 @@ public class PackagesInfo {
 					        0) + preferences.getLong(ra.uid + "send", 0));
 					list.add(appInfo);
 
-					// Ã¿ÔÂ1ÈÕ°Ñ¼ÇÂ¼ÇåÁã
+					// æ¯æœˆ1æ—¥æŠŠè®°å½•æ¸…é›¶
 					SharedPreferences preferences2 = mContext
 					        .getSharedPreferences("traffic_state",
 					                Context.MODE_PRIVATE);
@@ -168,7 +167,7 @@ public class PackagesInfo {
 		return list;
 	}
 
-	// »ñÈ¡ÏµÍ³Ê±¼ä¡£·µ»ØÊı×é
+	// è·å–ç³»ç»Ÿæ—¶é—´ï¼Œè¿”å›æ•°ç»„
 	private int[] getCurrentTime() {
 		int[] is = { 0, 0, 0 };
 		Time time = new Time();
